@@ -151,7 +151,11 @@ h1{font-size:24px;line-height:1.32;margin:12px 0 6px;letter-spacing:-0.8px;font-
     document.body.removeChild(t);
   }
 
-  if (isKakao) {
+  var PREVIEW = /[?&]preview=1/.test(location.search);
+
+  if (PREVIEW) {
+    show("card");
+  } else if (isKakao) {
     show("card");
     try { window.location.href = KAKAO_URL; } catch (e) {}
     setTimeout(function () { try { window.location.href = KAKAO_URL; } catch (e) {} }, 900);
