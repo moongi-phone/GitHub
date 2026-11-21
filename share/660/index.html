@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>660 카톡 공유 카드 보내기 (사장님용) | 인스모바일 비대면 개통</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1a56db">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FEE500'/%3E%3Ctext x='32' y='43' font-size='30' font-family='Arial' font-weight='bold' fill='%233C1E1E' text-anchor='middle'%3E%EC%B9%B4%3C/text%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  background:linear-gradient(180deg,#eef4ff 0%,#f7fbff 42%,#ffffff 100%);
+  color:#17233b;min-height:100vh;-webkit-text-size-adjust:100%;
+  padding:20px 16px 44px;
+}
+.wrap{max-width:520px;margin:0 auto}
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:800;color:#1a56db;letter-spacing:-0.2px;margin-bottom:14px}
+.brand span.dot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block}
+.card{background:#fff;border-radius:20px;padding:24px 18px 20px;box-shadow:0 10px 30px rgba(23,52,110,.10);border:1px solid #e6eefb}
+.badge{display:inline-block;background:#eaf1ff;color:#1a56db;font-size:12px;font-weight:800;border-radius:999px;padding:5px 11px;letter-spacing:-0.2px}
+h1{font-size:23px;line-height:1.32;margin:12px 0 4px;letter-spacing:-0.8px;font-weight:900}
+.sub{font-size:13.5px;color:#5b6b85;margin:0 0 4px;line-height:1.55}
+.preview-label{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:#64748b;margin:20px 0 8px;letter-spacing:-0.2px}
+.preview{border:1px solid #e2e9f5;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 4px 14px rgba(23,52,110,.06)}
+.preview img{display:block;width:100%;height:auto;aspect-ratio:1200/630}
+.preview .btnline{padding:10px 12px;border-top:1px solid #eef2f8;display:flex;justify-content:flex-end;background:#fbfdff}
+.preview .fake-btn{font-size:12.5px;font-weight:800;color:#1a56db;border:1.2px solid #bcd0f5;border-radius:9px;padding:7px 12px;background:#fff}
+.share{margin:18px 0 0}
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;border-radius:16px;padding:20px 14px;font-size:18.5px;font-weight:900;letter-spacing:-0.6px;border:0;width:100%;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.btn-main{background:#1a56db;color:#fff;box-shadow:0 8px 20px rgba(26,86,219,.30)}
+.btn-main:active{background:#1444b0}
+.btn-main[disabled]{background:#94a3b8;box-shadow:none}
+.guide{margin:14px 0 0;background:#f3f8ff;border:1px solid #dbe8fd;border-radius:13px;padding:13px 14px;font-size:13.8px;line-height:1.68;color:#274b8a;font-weight:600;word-break:keep-all}
+.divider{height:1px;background:#eef2f8;margin:20px 0 16px}
+h2{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-0.3px}
+.tips{margin:0;padding:0;list-style:none;counter-reset:t}
+.tips li{counter-increment:t;position:relative;padding:0 0 0 30px;margin:0 0 11px;font-size:13.6px;line-height:1.62;color:#33415c;word-break:keep-all}
+.tips li::before{content:counter(t);position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;background:#eaf1ff;color:#1a56db;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.tips b{color:#0b1b3a}
+.small{font-size:12.3px;color:#8a97ad;text-align:center;margin-top:14px;line-height:1.65}
+.contact{font-size:13.5px;line-height:1.9;color:#334155;text-align:center}
+.contact a{color:#1a56db;text-decoration:none;font-weight:800}
+.status{margin-top:14px;font-size:12.5px;line-height:1.6;border-radius:11px;padding:10px 12px;display:none}
+.status.ok{display:block;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-weight:700}
+.status.err{display:block;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-weight:700;word-break:break-all}
+#debug{margin-top:12px;font-size:11.5px;color:#94a3b8;line-height:1.6;display:none;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span class="dot"></span>LG U+ 인스모바일 · 앤텔레콤</div>
+
+  <div class="card">
+    <span class="badge">사장님 전용 · 660 테스트 카드</span>
+    <h1>660 카톡 공유 카드</h1>
+    <p class="sub">아래 버튼을 누르면 카톡으로 보낼 곳을 고르는 화면이 뜹니다.<br>링크 글자 없이 <b>카드(썸네일)만</b> 깔끔하게 전송돼요.</p>
+
+    <div class="preview-label">📱 카톡에 이렇게 도착합니다</div>
+    <div class="preview">
+      <img src="../../og-660.png" alt="인스 선불 정액 660 월 66,000원 카드 미리보기" width="1200" height="630">
+      <div class="btnline"><span class="fake-btn">바로 개통 신청하기</span></div>
+    </div>
+
+    <div class="share">
+      <button type="button" id="shareBtn" class="btn btn-main">💬 카카오톡으로 660 카드 보내기</button>
+      <div class="guide">아래 파란 버튼을 누르면 카톡 친구/채팅방 선택 창이 뜹니다. '나와의 채팅'이나 고객님 방을 골라 보내시면 노란 링크 말풍선 없이 깔끔한 카드만 전송돼요!</div>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+      <div id="debug"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>이렇게 보내시면 돼요</h2>
+    <ol class="tips">
+      <li>버튼을 누르면 <b>카카오톡</b>이 열리고, 보낼 사람·채팅방을 고르는 화면이 나옵니다.</li>
+      <li>먼저 <b>'나와의 채팅'</b>으로 보내 보세요. 고객님께 가기 전에 카드 모양을 바로 확인할 수 있어요.</li>
+      <li>카드를 <b>누르면</b> 개통 안내 페이지가 열리고, 거기 <b>'바로 개통 신청하기'</b>를 누르면 크롬으로 인스모바일 개통 화면이 열립니다.</li>
+      <li>휴대폰에서는 카톡 앱이 바로 뜨고, PC에서는 카카오 로그인 후 선택 창이 뜹니다.</li>
+    </ol>
+
+    <div class="small">이 화면은 사장님만 보는 발송용 페이지입니다. (검색 노출 안 됨)</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="contact">문의 <a href="tel:01029541685">010-2954-1685</a> · 연중무휴 오전 9시 ~ 오후 8시 접수</div>
+</div>
+
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.5/kakao.min.js" integrity="sha384-v6JKY3z4FUkWq21oZDHZe74YvuPk/WUrVLrDHTBojHXClOSa3iXy7sCXPY1jkFbj" crossorigin="anonymous"></script>
+<script>
+(function () {
+  var JS_KEY = '36cf20cf171668c5e654c4d27910c7f8';
+  var LANDING = 'https://moongi-phone.github.io/GitHub/660/';
+  var SHARE_IMG = 'https://moongi-phone.github.io/GitHub/og-660.png';
+
+  var btn = document.getElementById('shareBtn');
+  var statusEl = document.getElementById('status');
+  var debugEl = document.getElementById('debug');
+  var isDebug = /[?&]debug=1/.test(location.search);
+
+  function say(kind, msg) {
+    statusEl.className = 'status ' + kind;
+    statusEl.textContent = msg;
+  }
+  function dbg(msg) {
+    if (!isDebug) return;
+    debugEl.style.display = 'block';
+    debugEl.textContent = msg;
+  }
+
+  var hasKakao = (typeof Kakao !== 'undefined' && Kakao && Kakao.Share);
+  if (!hasKakao) {
+    say('err', '카카오 SDK를 불러오지 못했어요. 새로고침 한 번 해 주세요.');
+    dbg('Kakao SDK not loaded');
+    btn.disabled = false;
+    return;
+  }
+
+  try {
+    Kakao.init(JS_KEY);
+  } catch (e) {
+    say('err', '카카오 초기화 오류: ' + (e && e.message ? e.message : e));
+    dbg('init error');
+    return;
+  }
+  dbg('initialized=' + Kakao.isInitialized() + ' · host=' + location.host);
+
+  var template = {
+    objectType: 'feed',
+    content: {
+      imageUrl: SHARE_IMG,
+      imageWidth: 1200,
+      imageHeight: 630,
+      link: { mobileWebUrl: LANDING, webUrl: LANDING }
+    },
+    buttons: [
+      { title: '바로 개통 신청하기', link: { mobileWebUrl: LANDING, webUrl: LANDING } }
+    ]
+  };
+
+  btn.addEventListener('click', function () {
+    say('ok', '카톡 보낼 곳 고르는 화면을 여는 중이에요...');
+    try {
+      var p = Kakao.Share.sendDefault(template);
+      if (p && typeof p.then === 'function') {
+        p.then(function () {
+          say('ok', '카톡 선택 창이 열렸어요. 보낼 방을 골라 주세요!');
+          dbg('sendDefault resolved');
+        })['catch'](function (err) {
+          var code = err && (err.status || err.code);
+          var msg = err && (err.msg || err.message);
+          say('err', '전송 창을 열지 못했어요' + (code ? ' (오류 ' + code + ')' : '') + (msg ? ': ' + msg : '') + ' — 새로고침 후 다시 눌러 주세요.');
+          dbg('sendDefault error: ' + JSON.stringify(err && (err.status || err.msg) ? { status: err.status, msg: err.msg } : err));
+        });
+      } else {
+        say('ok', '카톡 선택 창이 열렸어요. 보낼 방을 골라 주세요!');
+      }
+    } catch (e) {
+      say('err', '전송 창을 열지 못했어요: ' + (e && e.message ? e.message : e));
+      dbg('throw: ' + (e && e.message));
+    }
+  });
+
+  window.__share660 = { template: template, ready: function () { return Kakao.isInitialized(); } };
+})();
+</script>
+</body>
+</html>
