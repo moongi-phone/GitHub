@@ -107,13 +107,25 @@ h2{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
   function dbg(msg) {
     if (!isDebug) return;
     debugEl.style.display = 'block';
-    debugEl.textContent = msg;
+    debugEl.textContent = debugEl.textContent ? (debugEl.textContent + '\n' + msg) : msg;
   }
 
-  if (typeof Kakao === 'undefined' || !Kakao || !Kakao.init) {
+  var hasKakao = (typeof Kakao !== 'undefined' && Kakao && typeof Kakao.init === 'function');
+  if (!hasKakao) {
     say('err', '카카오 SDK를 불러오지 못했어요. 새로고침 한 번 해 주세요.');
     dbg('Kakao SDK not loaded');
     return;
+  }
+
+  // 디버그(?debug=1)에서만: 카톡 선택 창이 실제로 어떤 주소로 열리는지 기록
+  if (isDebug) {
+    var rawOpen = window.open;
+    window.open = function () {
+      var u = arguments[0] || '';
+      var w = rawOpen.apply(window, arguments);
+      dbg('popup: ' + u + (w ? '' : ' · blocked'));
+      return w;
+    };
   }
 
   // Kakao.Share 등 모듈은 Kakao.init() 이 실행될 때 붙습니다. init 을 먼저 부릅니다.
