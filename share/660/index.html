@@ -110,22 +110,29 @@ h2{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
     debugEl.textContent = msg;
   }
 
-  var hasKakao = (typeof Kakao !== 'undefined' && Kakao && Kakao.Share);
-  if (!hasKakao) {
+  if (typeof Kakao === 'undefined' || !Kakao || !Kakao.init) {
     say('err', '카카오 SDK를 불러오지 못했어요. 새로고침 한 번 해 주세요.');
     dbg('Kakao SDK not loaded');
-    btn.disabled = false;
     return;
   }
 
+  // Kakao.Share 등 모듈은 Kakao.init() 이 실행될 때 붙습니다. init 을 먼저 부릅니다.
   try {
-    Kakao.init(JS_KEY);
+    if (!Kakao.isInitialized()) {
+      Kakao.init(JS_KEY);
+    }
   } catch (e) {
     say('err', '카카오 초기화 오류: ' + (e && e.message ? e.message : e));
-    dbg('init error');
+    dbg('init error: ' + (e && e.message));
     return;
   }
-  dbg('initialized=' + Kakao.isInitialized() + ' · host=' + location.host);
+
+  if (!Kakao.Share || typeof Kakao.Share.sendDefault !== 'function') {
+    say('err', '카카오 공유 기능을 준비하지 못했어요. 새로고침 한 번 해 주세요.');
+    dbg('Share module missing after init · initialized=' + Kakao.isInitialized());
+    return;
+  }
+  dbg('initialized=' + Kakao.isInitialized() + ' · ver=' + Kakao.VERSION + ' · host=' + location.host);
 
   var template = {
     objectType: 'feed',
