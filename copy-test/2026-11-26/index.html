@@ -34,9 +34,9 @@
     -webkit-tap-highlight-color:transparent; transition:transform .06s, background .15s;
   }
   .btn:active{transform:scale(.985)}
-  .btn-primary{background:#1a56db;color:#fff;box-shadow:0 6px 16px rgba(26,86,219,.26);flex:2 1 240px}
+  .btn-primary{background:#1a56db;color:#fff;box-shadow:0 6px 16px rgba(26,86,219,.26);flex:2 1 250px}
   .btn-primary:active{background:#1444b0}
-  .btn-sub{background:#fff;color:#1a56db;border:1.5px solid #bcd0f5;flex:1 1 120px}
+  .btn-sub{background:#fff;color:#1a56db;border:1.5px solid #bcd0f5;flex:1 1 100px}
   .btn-sub:active{background:#eef4ff}
   .howto{margin:10px 0 0;font-size:12.5px;line-height:1.7;color:#5b6b85}
   .howto b{color:#1a56db}
@@ -79,6 +79,7 @@
   <div class="tbin">
     <div class="tbrow">
       <button class="btn btn-primary" id="btnAll" type="button">📋 제목+본문+이미지 전체 복사</button>
+      <button class="btn btn-sub" id="btnBody" type="button">본문만 복사</button>
       <button class="btn btn-sub" id="btnTitle" type="button">제목만 복사</button>
     </div>
     <p class="howto">
@@ -138,7 +139,7 @@
     toastTimer = setTimeout(function () { toastEl.className = 'toast'; }, 3200);
   }
 
-  function articleHtml() {
+  function articleHtml(withTitle) {
     var clone = article.cloneNode(true);
     // absolute image URLs, explicit sizing for editors that ignore CSS
     clone.querySelectorAll('img').forEach(function (img) {
@@ -149,13 +150,18 @@
     });
     var h1 = clone.querySelector('h1');
     if (h1) {
-      h1.setAttribute('style', 'font-size:26px;font-weight:900;line-height:1.38;margin:0 0 22px;');
+      if (!withTitle) { h1.remove(); }
+      else { h1.setAttribute('style', 'font-size:26px;font-weight:900;line-height:1.38;margin:0 0 22px;'); }
     }
     return clone.innerHTML;
   }
 
-  function plainText() {
+  function plainText(withTitle) {
     var clone = article.cloneNode(true);
+    if (!withTitle) {
+      var t = clone.querySelector('h1');
+      if (t) { t.remove(); }
+    }
     // drop images from the plain-text version, keep one blank line where each was
     clone.querySelectorAll('img').forEach(function (img) {
       img.replaceWith(document.createTextNode(''));
@@ -175,9 +181,9 @@
     return ok;
   }
 
-  function copyRich(okMsg) {
-    var htmlPart = articleHtml();
-    var textPart = plainText();
+  function copyRich(withTitle, okMsg) {
+    var htmlPart = articleHtml(withTitle);
+    var textPart = plainText(withTitle);
     if (navigator.clipboard && window.ClipboardItem) {
       try {
         var item = new ClipboardItem({
@@ -198,7 +204,11 @@
   }
 
   document.getElementById('btnAll').addEventListener('click', function () {
-    copyRich('복사했어요. 에디터 본문에 그대로 붙여넣으세요.');
+    copyRich(true, '복사했어요. 에디터 본문에 그대로 붙여넣으세요.');
+  });
+
+  document.getElementById('btnBody').addEventListener('click', function () {
+    copyRich(false, '본문(이미지 포함)만 복사했어요. 제목은 따로 넣으세요.');
   });
 
   document.getElementById('btnTitle').addEventListener('click', function () {
