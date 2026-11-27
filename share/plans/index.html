@@ -217,12 +217,9 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
     say('err', '카카오 SDK를 불러오지 못했어요. 새로고침 한 번 해 주세요.');
     return;
   }
-  if (!Kakao.Share || typeof Kakao.Share.sendDefault !== 'function') {
-    say('err', '카카오 공유 기능을 준비하지 못했어요. 새로고침 한 번 해 주세요.');
-    return;
-  }
 
   // 버튼을 누를 때마다 그 카드의 앱으로 SDK를 다시 초기화합니다(앱 키 전환).
+  // SDK 모듈(Kakao.Share 등)은 init 뒤에 생기므로 확인도 init 다음에 합니다.
   function useApp(appCode) {
     var app = APPS[appCode];
     if (!app) throw new Error('unknown app: ' + appCode);
@@ -231,6 +228,7 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
     } catch (e) { /* 초기화 전이면 무시 */ }
     Kakao.init(app.key);
     if (Kakao.isInitialized() !== true) throw new Error('카카오 초기화가 끝나지 않았어요');
+    if (!Kakao.Share || typeof Kakao.Share.sendDefault !== 'function') throw new Error('카카오 공유 기능을 준비하지 못했어요');
     return app;
   }
 
