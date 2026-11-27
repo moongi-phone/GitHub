@@ -40,6 +40,8 @@ h1{font-size:23px;line-height:1.32;margin:12px 0 4px;letter-spacing:-0.8px;font-
 .preview .dsc{display:block;font-size:12.5px;color:#64748b;font-weight:600;line-height:1.5;word-break:keep-all}
 .preview .btnline{padding:10px 12px;border-top:1px solid #eef2f8;display:flex;justify-content:flex-end;background:#fbfdff}
 .preview .fake-btn{font-size:12.5px;font-weight:800;color:#1a56db;border:1.2px solid #bcd0f5;border-radius:9px;padding:7px 12px;background:#fff}
+.preview + .appname{font-size:12px;color:#64748b;font-weight:600;margin:7px 0 0;letter-spacing:-0.2px}
+.preview + .appname b{color:#0b1b3a;font-weight:900}
 .btn{display:flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;border-radius:16px;padding:19px 14px;font-size:18px;font-weight:900;letter-spacing:-0.6px;border:0;width:100%;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent}
 .btn-next{background:#fee500;color:#3c1e1e;box-shadow:0 8px 20px rgba(180,160,0,.22);margin-top:12px}
 .btn-next:active{background:#f6d900}
@@ -89,6 +91,7 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
         </div>
         <div class="btnline"><a class="fake-btn" href="../../plans/freet/">요금제 보고 바로개통</a></div>
       </div>
+      <div class="appname">카드 맨 아래 표기 · <b>SKT KT LG 3사 비대면 개통</b></div>
       <button type="button" class="btn btn-next" data-card="freet">💬 프리티(SKT·KT·LG) 요금제 카드 보내기</button>
       <a class="btn btn-open" href="../../plans/freet/">프리티 요금제 페이지 먼저 확인하기 →</a>
     </div>
@@ -106,6 +109,7 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
         </div>
         <div class="btnline"><a class="fake-btn" href="../../plans/ins/">요금제 보고 바로개통</a></div>
       </div>
+      <div class="appname">카드 맨 아래 표기 · <b>인스모바일 LG 비대면 개통</b></div>
       <button type="button" class="btn btn-next" data-card="ins">💬 인스모바일(LG U+) 요금제 카드 보내기</button>
       <a class="btn btn-open" href="../../plans/ins/">인스모바일 요금제 페이지 먼저 확인하기 →</a>
     </div>
@@ -136,11 +140,18 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.5/kakao.min.js" integrity="sha384-v6JKY3z4FUkWq21oZDHZe74YvuPk/WUrVLrDHTBojHXClOSa3iXy7sCXPY1jkFbj" crossorigin="anonymous"></script>
 <script>
 (function () {
-  var JS_KEY = "36cf20cf171668c5e654c4d27910c7f8";
+  // 카드별로 카카오 앱을 따로 씁니다 → 카톡 카드 맨 아래 '(앱 이름)'이 카드마다 다르게 표시됩니다.
+  // freet = SKT KT LG 3사 비대면 개통 (앱 ID 1660879)
+  // ins   = 인스모바일 LG 비대면 개통 (앱 ID 1668467)
+  var APPS = {
+    freet: { name: "SKT KT LG 3사 비대면 개통", key: "36cf20cf171668c5e654c4d27910c7f8" },
+    ins: { name: "인스모바일 LG 비대면 개통", key: "a17e51eb97014b46925f87bfa00b5f33" }
+  };
   var BASE = "https://moongi-phone.github.io/GitHub/plans/";
   var CARDS = {
     freet: {
       label: "프리티",
+      app: "freet",
       template: {
         "objectType": "feed",
         "content": {
@@ -167,6 +178,7 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
     },
     ins: {
       label: "인스모바일",
+      app: "ins",
       template: {
         "objectType": "feed",
         "content": {
@@ -205,14 +217,27 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
     say('err', '카카오 SDK를 불러오지 못했어요. 새로고침 한 번 해 주세요.');
     return;
   }
-  try {
-    if (!Kakao.isInitialized()) Kakao.init(JS_KEY);
-  } catch (e) {
-    say('err', '카카오 초기화 오류: ' + (e && e.message ? e.message : e));
-    return;
-  }
   if (!Kakao.Share || typeof Kakao.Share.sendDefault !== 'function') {
     say('err', '카카오 공유 기능을 준비하지 못했어요. 새로고침 한 번 해 주세요.');
+    return;
+  }
+
+  // 버튼을 누를 때마다 그 카드의 앱으로 SDK를 다시 초기화합니다(앱 키 전환).
+  function useApp(appCode) {
+    var app = APPS[appCode];
+    if (!app) throw new Error('unknown app: ' + appCode);
+    try {
+      if (typeof Kakao.cleanup === 'function') Kakao.cleanup();
+    } catch (e) { /* 초기화 전이면 무시 */ }
+    Kakao.init(app.key);
+    if (Kakao.isInitialized() !== true) throw new Error('카카오 초기화가 끝나지 않았어요');
+    return app;
+  }
+
+  try {
+    useApp('freet'); // 첫 화면 기본 앱(프리티)
+  } catch (e) {
+    say('err', '카카오 초기화 오류: ' + (e && e.message ? e.message : e));
     return;
   }
 
@@ -220,7 +245,8 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
     ready: function () { return Kakao.isInitialized() === true; },
     cards: Object.keys(CARDS),
     templates: CARDS,
-    key: JS_KEY
+    apps: APPS,
+    useApp: useApp
   };
 
   var btns = document.querySelectorAll('.btn-next');
@@ -231,6 +257,7 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
       if (!card) return;
       say('ok', card.label + ' 카드: 카톡 보낼 곳 고르는 화면을 여는 중이에요...');
       try {
+        var app = useApp(card.app);
         var r = Kakao.Share.sendDefault(card.template);
         if (r && typeof r.then === 'function') {
           r.then(function () {
@@ -241,7 +268,7 @@ h3{font-size:14px;font-weight:900;margin:0 0 10px;color:#0b1b3a;letter-spacing:-
             say('err', card.label + ' 카드 전송 창을 열지 못했어요' + (c ? ' (오류 ' + c + ')' : '') + (m ? ': ' + m : '') + ' — 새로고침 후 다시 눌러 주세요.');
           });
         } else {
-          say('ok', card.label + ' 카드: 카톡 선택 창이 열렸어요. 보낼 방을 골라 주세요!');
+          say('ok', card.label + ' 카드: 카톡 선택 창이 열렸어요. 보낼 방을 골라 주세요! (' + app.name + ')');
         }
       } catch (e) {
         say('err', card.label + ' 카드 전송 창을 열지 못했어요: ' + (e && e.message ? e.message : e));
